@@ -20,7 +20,7 @@ if(isset($_GET['postcode'])) {
 	if(isset($areas['WMC'])) {
 		$mp = fetchMP($_GET['postcode']);
 		echo '<h2>'.$mp['first_name'].' '.$mp['last_name'].'</h2>';
-		echo '<p>Parliamentary MP for your constituency &quot;'.$mp['constituency'].'&nbsp;, they were last elected on '.$mp['entered_house'].'. They represent the '.$mp['party'].' party.</p>';
+		echo '<p>Parliamentary MP for your constituency &quot;'.$mp['constituency'].'&quot;, they were last elected on '.$mp['entered_house'].'. They represent the '.$mp['party'].' party.</p>';
 	} if(isset($areas['UTA'])) print_r(matchCouncil($areas['UTA'],'Unitary'));
 	//print_r($areas);
 }
