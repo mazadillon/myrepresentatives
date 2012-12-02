@@ -21,6 +21,12 @@ function fetchMEPs($region) {
 	}
 }
 
+function fetchPCC($force) {
+	$result = mysql_query("SELECT *,policeauthorities.name as authority_name FROM policeauthorities JOIN policecrimecommissioners ON policecrimecommissioners.authority_id=policeauthorities.id WHERE policeauthorities.id='".mysql_real_escape_string($force)."'") or die(mysql_error());
+	if(mysql_num_rows($result) < 1) return false;
+	else return mysql_fetch_assoc($result);
+}
+
 if(isset($_GET['postcode'])) {
 	$data = json_decode(file_get_contents("http://mapit.mysociety.org/postcode/".urlencode($_GET['postcode']).'.json'),1);
 	print_r($data);
@@ -41,7 +47,18 @@ if(isset($_GET['postcode'])) {
 		}
 		echo '</ul>';
 	}
-	if(isset($areas['UTA'])) print_r(matchCouncil($areas['UTA'],'Unitary'));
+	if(isset($areas['UTA'])) {
+		$council = matchCouncil($areas['UTA'],'Unitary');
+	}
+	if($council['police_force_id']) {
+		$pcc = fetchPCC($council['police_force_id']);
+		if($pcc) {
+			echo '<h2>'.$pcc['name'].'</h2>';
+			echo '<p>Your elected police crime commissioner for '.$pcc['authority_name'];
+			if($pcc['party']!='independent') echo ', a member of the '.ucwords($pcc['party']).' party.</p>';
+			else echo ', an independent</p>';
+		}
+	}
 	//print_r($areas);
 }
 ?>
