@@ -21,6 +21,22 @@ function fetchMEPs($region) {
 	}
 }
 
+function fetchWACM($constituency) {
+	$result = mysql_query("SELECT * FROM welshassemblymembers WHERE constituency='".mysql_real_escape_string($constituency)."'");
+	if(mysql_num_rows($result)==1)	return mysql_fetch_assoc($result);	
+	else return false;
+}
+
+function fetchWARM($region) {
+	$result = mysql_query("SELECT * FROM welshassemblymembers WHERE region='".mysql_real_escape_string($region)."'");
+	if(mysql_num_rows($result)>1) {
+		$members = array();
+		while($row=mysql_fetch_assoc($result)) $members[] = $row;
+		return $members;
+	} else return false;
+}
+
+
 function fetchPCC($force) {
 	$result = mysql_query("SELECT *,policeauthorities.name as authority_name FROM policeauthorities JOIN policecrimecommissioners ON policecrimecommissioners.authority_id=policeauthorities.id WHERE policeauthorities.id='".mysql_real_escape_string($force)."'") or die(mysql_error());
 	if(mysql_num_rows($result) < 1) return false;
@@ -49,6 +65,21 @@ if(isset($_GET['postcode'])) {
 	}
 	if(isset($areas['UTA'])) {
 		$council = matchCouncil($areas['UTA'],'Unitary');
+	}
+	if(isset($areas['WAC'])) {
+		$member = fetchWACM($areas['WAC']);
+		echo '<h1>'.$member['name'].'</h1>';
+		echo '<p>Represents you and the rest of the "'.$member['constituency'].'" constituency at the Welsh Assembly, they are a member of '.$member['party'].'</p>';
+	}
+	if(isset($areas['WAE'])) {
+		$members = fetchWARM($areas['WAE']);
+		echo '<h1>'.$areas['WAE'].' Welsh Assembly Region</h1>';
+		print_r($members);
+		echo '<ul>';
+		foreach($members as $member) {
+			echo '<li>'.$member['name'].', a member of '.$member['party'].'</li>';
+		}
+		echo '</ul>';
 	}
 	if($council['police_force_id']) {
 		$pcc = fetchPCC($council['police_force_id']);
