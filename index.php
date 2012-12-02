@@ -1,5 +1,19 @@
 <?php
 require 'config.php';
+$config['types']['WMP'] = 'Westminster Parliament';
+$config['types']['WMC'] = 'Westminster Parliament Constituency';
+$config['types']['SPA'] = 'Scottish Parliament';
+$config['types']['SPC'] = 'Scottish Parliament Constituency';
+$config['types']['DIS'] = 'District Council';
+$config['types']['DIW'] = 'District Council Ward';
+$config['types']['UTA'] = 'Unitary Authority';
+$config['types']['UTW'] = 'Unitary Authority Ward';
+$config['types']['CTY'] = 'County Council';
+$config['types']['CED'] = 'County Council Ward';
+$config['types']['CPC'] = 'Civil Parish';
+$config['types']['EUR'] = 'European Parliament Region';
+$config['types']['WAC'] = 'Welsh Assembly Constituency';
+$config['types']['WAE'] = 'Welsh Assembly Region';
 
 function matchCouncil($name,$type) {
 	$result = mysql_query("SELECT * FROM councils WHERE type='".mysql_real_escape_string($type)."' AND name='".mysql_real_escape_string($name)."'");
